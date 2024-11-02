@@ -8,7 +8,7 @@
    - [ x ] Create initial package.json files [turbo.json]
    - [ x ] Create initial package.json files [packages/frontend]
    - [ x ] Frontend MPV, three pages and routing and tests
-   - [ ] Set up Docker configurations
+   - [ x ] Set up Backend Docker configurations
    - [ ]
 
 2. Basic Frontend Setup
