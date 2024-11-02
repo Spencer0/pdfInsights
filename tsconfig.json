@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "ES6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "packages/frontend/src/**/*",
+    "packages/backend/src/**/*",
+    "packages/common/**/*"
+  ],
+  "exclude": ["node_modules"]
+}

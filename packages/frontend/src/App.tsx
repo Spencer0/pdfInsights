@@ -1,10 +1,12 @@
+// frontend/src/App.tsx
+
 import React, { useState } from 'react';
 import FinancialPlanner from './components/FinancialPlanner';
 import LoadSpinner from './components/LoadSpinner';
 import InsightsDashboard from './components/InsightsDashboard';
 
-function App() {
-  const [page, setPage] = useState('financialPlanner');
+const App: React.FC = () => {
+  const [page, setPage] = useState<string>('financialPlanner');
 
   const handlePDFUpload = () => {
     setPage('loadSpinner');
@@ -27,6 +29,6 @@ function App() {
   };
 
   return <div>{renderPage()}</div>;
-}
+};
 
 export default App;

@@ -1,11 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { getLoadingMessages } from '../utils/loadingMessages';
+// frontend/src/components/LoadSpinner.tsx
 
-function LoadSpinner() {
-  const [message, setMessage] = useState('');
+import React, { useEffect, useState } from 'react';
+
+const LoadSpinner: React.FC = () => {
+  const [message, setMessage] = useState<string>('');
 
   useEffect(() => {
-    const messages = getLoadingMessages();
+    const messages = [
+      "Crunching the numbers...",
+      "Fetching your insights...",
+      "Analyzing your data...",
+      "Just a moment...",
+      "Loading financial forecasts...",
+    ];
     let index = 0;
 
     const interval = setInterval(() => {
@@ -26,6 +33,6 @@ function LoadSpinner() {
       <p>{message}</p>
     </div>
   );
-}
+};
 
 export default LoadSpinner;

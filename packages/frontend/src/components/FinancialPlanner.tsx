@@ -1,7 +1,11 @@
 import React from 'react';
 
-function FinancialPlanner({ onPDFUpload }) {
-  const handleUpload = (event) => {
+interface FinancialPlannerProps {
+  onPDFUpload: () => void;
+}
+
+const FinancialPlanner: React.FC<FinancialPlannerProps> = ({ onPDFUpload }) => {
+  const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Implement PDF validation logic here if needed
     onPDFUpload();
   };
@@ -12,6 +16,6 @@ function FinancialPlanner({ onPDFUpload }) {
       <input type="file" accept="application/pdf" onChange={handleUpload} />
     </div>
   );
-}
+};
 
 export default FinancialPlanner;
