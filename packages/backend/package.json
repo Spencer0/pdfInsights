@@ -4,8 +4,9 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "ts-node src/server.ts"
+    "start": "node dist/backend/src/server.js",
+    "dev": "ts-node src/server.ts",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -28,5 +29,5 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
-}
+  }
 }
