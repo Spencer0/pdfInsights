@@ -1,4 +1,4 @@
-import { PDFInsights } from '../../common/src/PDFInsights';
+import { PDFInsights } from '../../common/models/PDFInsights';
 
 export const generateRandomInsights = (): PDFInsights => {
     return {

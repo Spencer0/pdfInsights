@@ -1,5 +1,5 @@
 import React from 'react';
-import { PDFInsights } from '../../../common/src/PDFInsights';
+import { PDFInsights } from '../../../common/models/PDFInsights';
 
 const InsightsDashboard: React.FC = (PDFInsights) => {
   console.log(PDFInsights)

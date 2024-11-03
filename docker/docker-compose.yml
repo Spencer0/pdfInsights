@@ -3,7 +3,7 @@ version: '3'
 services:
   backend:
     build:
-      context: ../packages/backend/
-      dockerfile: ../../docker/backend.Dockerfile
+      context: ../
+      dockerfile: docker/backend.Dockerfile
     ports:
       - "3000:3000"

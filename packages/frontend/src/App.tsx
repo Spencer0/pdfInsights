@@ -1,12 +1,11 @@
-// frontend/src/App.tsx
-
 import React, { useState } from 'react';
 import FinancialPlanner from './components/FinancialPlanner';
 import LoadSpinner from './components/LoadSpinner';
 import InsightsDashboard from './components/InsightsDashboard';
+import APITestPage from "./components/ApiTestComponent"
 
 const App: React.FC = () => {
-  const [page, setPage] = useState<string>('financialPlanner');
+  const [page, setPage] = useState<string>('APITestPage');
 
   const handlePDFUpload = () => {
     setPage('loadSpinner');
@@ -17,6 +16,8 @@ const App: React.FC = () => {
 
   const renderPage = () => {
     switch (page) {
+      case 'APITestPage':
+        return <APITestPage />;
       case 'financialPlanner':
         return <FinancialPlanner onPDFUpload={handlePDFUpload} />;
       case 'loadSpinner':

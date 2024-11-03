@@ -1,5 +1,5 @@
 import { generateRandomInsights } from '../insightsGenerator';
-import { PDFInsights } from '../../../common/src/PDFInsights';
+import { PDFInsights } from '../../../common/models/PDFInsights';
 
 describe('generateRandomInsights', () => {
     it('should return insights with values between 0 and 1,000,000', () => {
