@@ -11,8 +11,13 @@ RUN npm install
 # Copy the rest of the backend code
 COPY . .
 
+# Copy in shared model code
+COPY ../common ../packages/common
+
+RUN npm run build
+
 # Expose the port the app runs on
 EXPOSE 3000
 
 # Command to run the application
-CMD ["node", "src/server.js"]
+CMD ["node", "dist/server.js"]
