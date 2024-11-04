@@ -9,6 +9,7 @@ const upload = multer({ dest: 'uploads/' });
 
 
 //Handrolled cors policy
+
 //Order Matters, keep this above the endpoints
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:3001'); //TODO make a backend env file

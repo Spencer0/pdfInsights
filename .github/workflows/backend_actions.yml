@@ -1,0 +1,61 @@
+name: Deploy Backend to AWS
+
+on:
+  push:
+    paths:
+      - 'backend/src/**'  # Only run if changes are made to backend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        working-directory: ./packages/backend
+        run: npm install
+
+      - name: Run tests
+        working-directory: ./packages/backend
+        run: npm test
+
+      - name: Log in to Amazon ECR
+        env:
+          AWS_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 216989142399.dkr.ecr.$AWS_REGION.amazonaws.com
+
+      - name: Build and tag Docker image
+        working-directory: ./packages/backend
+        run: |
+          docker build -t spendsage-backend .
+          docker tag spendsage-backend:latest 216989142399.dkr.ecr.us-east-1.amazonaws.com/spendsage-backend:latest
+
+      - name: Push Docker image to Amazon ECR
+        run: |
+          docker push 216989142399.dkr.ecr.us-east-1.amazonaws.com/spendsage-backend:latest
+
+      - name: Deploy to EC2 instance
+        env:
+          AWS_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          INSTANCE_ID=$(aws cloudformation describe-stacks --stack-name SpendSage-Backend-Stack --query "Stacks[0].Outputs[?OutputKey=='InstanceId'].OutputValue" --output text --region $AWS_REGION)
+          PUBLIC_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text --region $AWS_REGION)
+
+          ssh -o "StrictHostKeyChecking=no" ec2-user@$PUBLIC_IP << EOF
+            $(aws ecr get-login --no-include-email --region $AWS_REGION)
+            docker pull 216989142399.dkr.ecr.us-east-1.amazonaws.com/spendsage-backend:latest
+            docker stop $(docker ps -q --filter ancestor=216989142399.dkr.ecr.us-east-1.amazonaws.com/spendsage-backend:latest) || true
+            docker run -d -p 3000:3000 216989142399.dkr.ecr.us-east-1.amazonaws.com/spendsage-backend:latest
+          EOF
