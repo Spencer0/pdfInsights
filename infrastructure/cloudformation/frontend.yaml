@@ -4,7 +4,7 @@ Resources:
   FrontendBucket:
     Type: "AWS::S3::Bucket"
     Properties:
-      BucketName: "spendsage-frontend-bucket-us-east-1"
+      BucketName: "spendsage-frontend-s3-bucket-us-east-1"
       PublicAccessBlockConfiguration:
         BlockPublicAcls: false
         BlockPublicPolicy: false
