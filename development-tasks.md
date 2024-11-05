@@ -14,23 +14,23 @@
 2. Basic Frontend Setup
    - [ ] Initialize Next.js project
    - [ ] Install required dependencies (shadcn/ui, tailwind)
-   - [ ] Create placeholder pages (login, upload, dashboard)
-   - [ ] Set up basic routing
-   - [ ] Test with "Hello World" page locally
+   - [ x ] Create placeholder pages (login, upload, dashboard)
+   - [ x ] Set up basic routing
+   - [ x ] Test with "Hello World" page locally
 
 3. Basic Backend Setup
-   - [ ] Initialize Express project
-   - [ ] Set up TypeScript configuration
-   - [ ] Create basic health check endpoint (/health)
+   - [ x ] Initialize Express project
+   - [ x ] Set up TypeScript configuration
+   - [ x ] Create basic health check endpoint (/health)
    - [ ] Set up basic error handling middleware
-   - [ ] Test API locally
+   - [ x ] Test API locally
 
 4. Docker Environment
-   - [ ] Create frontend Dockerfile
-   - [ ] Create backend Dockerfile
-   - [ ] Create docker-compose.yml
-   - [ ] Test full local environment startup
-   - [ ] Verify frontend can call backend health check
+   - [ - ] Create frontend Dockerfile
+   - [ x  ] Create backend Dockerfile
+   - [ x ] Create docker-compose.yml
+   - [ x ] Test full local environment startup
+   - [ x ] Verify frontend can call backend health check
 
 ## Phase 2: Authentication
 1. AWS Cognito Setup
@@ -123,16 +123,16 @@
 
 ## Phase 6: Initial Deployment
 1. AWS Infrastructure
-   - [ ] Deploy CloudFormation template
+   - [ x ] Deploy CloudFormation template
    - [ ] Configure security groups
    - [ ] Set up load balancer
    - [ ] Configure domain and SSL
    - [ ] Test infrastructure
 
 2. CI/CD Pipeline
-   - [ ] Create GitHub Actions workflow
-   - [ ] Set up AWS credentials
-   - [ ] Add build steps
+   - [ x ] Create GitHub Actions workflow
+   - [ x ] Set up AWS credentials
+   - [ x ] Add build steps
    - [ ] Configure staging deployment
    - [ ] Test deployment
 

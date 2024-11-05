@@ -2,6 +2,3 @@ node_modules/
 access_keys.txt
 aws_creds.txt
 dist/
-# Environment files
-.env*
-!.env.example

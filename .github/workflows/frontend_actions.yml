@@ -1,0 +1,59 @@
+name: Deploy Frontend to AWS S3
+
+on:
+  push:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        working-directory: ./packages/frontend
+        run: npm install
+
+      - name: Build frontend
+        working-directory: ./packages/frontend
+        run: npm run build:prod
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy CloudFormation stack
+        working-directory: ./infrastructure/cloudformation
+        run: |
+          aws cloudformation deploy \
+            --template-file frontend.yaml \
+            --stack-name SpendSage-FrontEnd-Stack \
+            --capabilities CAPABILITY_IAM \
+            --no-fail-on-empty-changeset
+
+      - name: Deploy to S3
+        env:
+          AWS_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 sync ./packages/frontend/build s3://spendsage-frontend-bucket-us-east-1 --delete
+
+      - name: Invalidate CloudFront cache (optional)
+        if: success()  # Run only if previous steps succeeded
+        env:
+          AWS_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          DISTRIBUTION_ID=$(aws cloudformation describe-stacks --stack-name SpendSage-Frontend-Stack --query "Stacks[0].Outputs[?OutputKey=='CloudFrontURL'].OutputValue" --output text --region us-east-1)
+          aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"

@@ -1,4 +1,15 @@
 AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+
+  KeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance"
+
+
 Resources:
   BackendECRRepository:
     Type: "AWS::ECR::Repository"
@@ -43,12 +54,17 @@ Resources:
           FromPort: 3000
           ToPort: 3000
           CidrIp: "0.0.0.0/0"
+        - IpProtocol: "tcp" #TODO: ADDED TO HELP INFRASTRUCTURE / CICD, WHY IS PORT 22 open
+          FromPort: 22
+          ToPort: 22
+          CidrIp: "0.0.0.0/0"  # Consider restricting this to specific IPs
 
   BackendEC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
+      KeyName: !Ref KeyPairName
       InstanceType: "t3.micro"  # Smallest/cheapest EC2 instance
-      ImageId: "ami-0c55b159cbfafe1f0"  # Amazon Linux 2 AMI (region-dependent)
+      ImageId: !Ref LatestAmiId      
       IamInstanceProfile: !Ref BackendInstanceProfile
       SecurityGroupIds:
         - !Ref BackendSecurityGroup
@@ -63,6 +79,7 @@ Resources:
           $(aws ecr get-login --no-include-email --region us-east-1)
           docker pull 216989142399.dkr.ecr.us-east-1.amazonaws.com/spendsage-backend:latest
           docker run -d -p 3000:3000 216989142399.dkr.ecr.us-east-1.amazonaws.com/spendsage-backend:latest
+
 Outputs:
   InstanceId:
     Description: "Instance ID of the backend EC2 instance"
