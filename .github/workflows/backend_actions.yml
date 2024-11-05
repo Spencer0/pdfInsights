@@ -43,7 +43,11 @@ jobs:
             --stack-name SpendSage-Backend-Stack \
             --capabilities CAPABILITY_IAM \
             --no-fail-on-empty-changeset \
-            --parameter-overrides KeyPairName=sendsage-deployment-key
+            
+            --parameter-overrides \
+              DomainName=spendsages.click \
+              HostedZoneId=Z0022345XYSWYWO9QF50 \
+              KeyPairName=sendsage-deployment-key
 
       - name: Log in to Amazon ECR
         run: |

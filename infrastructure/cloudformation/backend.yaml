@@ -9,6 +9,13 @@ Parameters:
     Type: AWS::EC2::KeyPair::KeyName
     Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance"
 
+  DomainName:
+    Type: String
+    Description: "The domain name (e.g., example.com)"
+
+  HostedZoneId:
+    Type: AWS::Route53::HostedZone::Id
+    Description: "The Route 53 Hosted Zone ID for your domain"
 
 Resources:
   BackendECRRepository:
@@ -48,37 +55,85 @@ Resources:
   BackendSecurityGroup:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
-      GroupDescription: "Allow HTTP traffic on port 3000"
+      GroupDescription: "Allow HTTP/HTTPS traffic"
       SecurityGroupIngress:
         - IpProtocol: "tcp"
-          FromPort: 3000
-          ToPort: 3000
+          FromPort: 80
+          ToPort: 80
           CidrIp: "0.0.0.0/0"
-        - IpProtocol: "tcp" #TODO: ADDED TO HELP INFRASTRUCTURE / CICD, WHY IS PORT 22 open
+        - IpProtocol: "tcp"
+          FromPort: 443
+          ToPort: 443
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: "tcp"
           FromPort: 22
           ToPort: 22
           CidrIp: "0.0.0.0/0"  # Consider restricting this to specific IPs
+
+  DomainRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Ref DomainName
+      Type: A
+      TTL: '300'
+      ResourceRecords:
+        - !GetAtt BackendEC2Instance.PublicIp
 
   BackendEC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
       KeyName: !Ref KeyPairName
-      InstanceType: "t3.micro"  # Smallest/cheapest EC2 instance
+      InstanceType: "t3.micro"
       ImageId: !Ref LatestAmiId      
       IamInstanceProfile: !Ref BackendInstanceProfile
       SecurityGroupIds:
         - !Ref BackendSecurityGroup
       UserData:
-        Fn::Base64: |
+        Fn::Base64: !Sub |
           #!/bin/bash
+          # Update system
           yum update -y
-          yum install -y docker
-          service docker start
+          yum install -y docker nginx certbot python3-certbot-nginx
+
+          # Start and enable services
+          systemctl start docker
+          systemctl enable docker
+          systemctl start nginx
+          systemctl enable nginx
+
+          # Add ec2-user to docker group
           usermod -a -G docker ec2-user
-          # Authenticate Docker to use ECR
+
+          # Authenticate Docker with ECR
           $(aws ecr get-login --no-include-email --region us-east-1)
+          
+          # Pull and run backend container
           docker pull 216989142399.dkr.ecr.us-east-1.amazonaws.com/spendsage-backend:latest
           docker run -d -p 3000:3000 216989142399.dkr.ecr.us-east-1.amazonaws.com/spendsage-backend:latest
+
+          # Configure Nginx
+          cat > /etc/nginx/conf.d/backend.conf << 'EOL'
+          server {
+              listen 80;
+              server_name ${DomainName};
+
+              location / {
+                  proxy_pass http://localhost:3000;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection 'upgrade';
+                  proxy_set_header Host $host;
+                  proxy_cache_bypass $http_upgrade;
+              }
+          }
+          EOL
+
+          # Reload Nginx configuration
+          systemctl reload nginx
+
+          # Get SSL certificate
+          certbot --nginx -d ${DomainName} --non-interactive --agree-tos --email admin@${DomainName} --redirect
 
 Outputs:
   InstanceId:
@@ -87,3 +142,6 @@ Outputs:
   EC2PublicIP:
     Description: "Public IP address of the EC2 instance"
     Value: !GetAtt BackendEC2Instance.PublicIp
+  DomainName:
+    Description: "Domain name for the application"
+    Value: !Ref DomainName
