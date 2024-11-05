@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'packages/backend/**'
-      - '.github/backend_actions.yml'
+      - '.github/workflows/backend_actions.yml'
       - 'infrastructure/cloudformation/backend.yaml'
 
 jobs:
