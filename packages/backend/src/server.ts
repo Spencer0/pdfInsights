@@ -41,6 +41,16 @@ app.get('/healthcheck', async (req, res) => {
 });
 
 
+app.get('/randomendpoint', async (req, res) => {
+    console.log('randomendpoint hit'); 
+    try {
+        res.status(200).json({ status: '1' }); 
+    } catch (error) {
+        res.status(500).json({ error: 'randomendpoint Failed' });
+    }
+});
+
+
 // Start the server
 const PORT = 3000;
 app.listen(PORT, () => {

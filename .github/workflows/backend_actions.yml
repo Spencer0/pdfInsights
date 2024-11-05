@@ -1,7 +1,9 @@
-name: Deploy Backend to AWS
+name: Backend CI/CD Pipeline
 
 on:
   push:
+    paths:
+      - 'packages/backend/**'
 
 jobs:
   deploy:
