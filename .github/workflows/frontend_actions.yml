@@ -36,7 +36,7 @@ jobs:
         run: |
           aws cloudformation deploy \
             --template-file frontend.yaml \
-            --stack-name SpendSage-FrontEnd-Stack \
+            --stack-name SpendSage-Frontend-Stack \
             --capabilities CAPABILITY_IAM \
             --no-fail-on-empty-changeset
 
