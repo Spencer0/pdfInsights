@@ -1,10 +1,15 @@
 AWSTemplateFormatVersion: "2010-09-09"
+
 Resources:
   FrontendBucket:
     Type: "AWS::S3::Bucket"
     Properties:
       BucketName: "spendsage-frontend-bucket-us-east-1"
-      AccessControl: PublicRead
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
       WebsiteConfiguration:
         IndexDocument: "index.html"
         ErrorDocument: "index.html"
@@ -14,6 +19,7 @@ Resources:
     Properties:
       Bucket: !Ref FrontendBucket
       PolicyDocument:
+        Version: "2012-10-17"
         Statement:
           - Effect: "Allow"
             Principal: "*"

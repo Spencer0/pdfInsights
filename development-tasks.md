@@ -9,11 +9,10 @@
    - [ x ] Create initial package.json files [packages/frontend]
    - [ x ] Frontend MPV, three pages and routing and tests
    - [ x ] Set up Backend Docker configurations
-   - [ ]
 
 2. Basic Frontend Setup
-   - [ ] Initialize Next.js project
-   - [ ] Install required dependencies (shadcn/ui, tailwind)
+   - [ x ] Initialize Next.js project
+   - [ x ] Install required dependencies (shadcn/ui, tailwind)
    - [ x ] Create placeholder pages (login, upload, dashboard)
    - [ x ] Set up basic routing
    - [ x ] Test with "Hello World" page locally
@@ -26,7 +25,6 @@
    - [ x ] Test API locally
 
 4. Docker Environment
-   - [ - ] Create frontend Dockerfile
    - [ x  ] Create backend Dockerfile
    - [ x ] Create docker-compose.yml
    - [ x ] Test full local environment startup
@@ -189,7 +187,7 @@
 
 3. Deployment
    - [ ] Frontend is deployed
-   - [ ] Backend is deployed
+   - [ x ] Backend is deployed
    - [ ] Automatic deployments work
    - [ ] SSL is configured
    - [ ] Backups are configured
