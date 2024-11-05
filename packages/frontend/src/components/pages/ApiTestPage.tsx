@@ -88,7 +88,7 @@ const APITestPage: React.FC = () => {
               className="bg-blue-600 text-white px-8 py-3 rounded-md text-lg hover:bg-blue-700 transform hover:scale-105 transition-transform"
               onClick={handleApiTest}
             >
-              Test Health Check API
+              Test Health Check API 2
             </button>
           </div>
         </div>

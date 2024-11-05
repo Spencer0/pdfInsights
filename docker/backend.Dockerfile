@@ -1,4 +1,7 @@
 # Use Node.js official image as base
+## THIS IS PUSHED AS PART OF THE CI/CD PIPELINE TO ECR
+## AND RAN ON THE EC2 INSTANCE 
+
 FROM node:14
 
 # Set the working directory
