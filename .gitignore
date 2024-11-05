@@ -2,3 +2,4 @@ node_modules/
 access_keys.txt
 aws_creds.txt
 dist/
+*.pem
