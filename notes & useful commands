@@ -8,6 +8,7 @@ PS C:\Users\Spencer\Desktop\spendsage\spendage> aws sts get-caller-identity
 
 curl -v -k https://ec2-18-234-94-169.compute-1.amazonaws.com:3000/healthcheck
 
+ec2-52-201-106-84.compute-1.amazonaws.com
 
 ssh -i sendsage-deployment-key.pem ec2-user@ec2-18-234-94-169.compute-1.amazonaws.com
 
