@@ -37,7 +37,6 @@ const allowedOrigins = [
     next();
 });
 
-
 app.post('/pdfinsights', upload.single('file'), async (req, res) => {
     try {
         console.log("Request Hit Post Metrics");
