@@ -3,7 +3,7 @@ import { API_BASE_URL } from '../../config';
 
 // Create an Axios instance with the base URL
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: 'https://api.spendsages.click/',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -12,7 +12,7 @@ console.log('API_BASE_URL:', API_BASE_URL);
 console.log('Environment Variables:', {
     nodeEnv: process.env.NODE_ENV,
     apiUrlLocal: process.env.REACT_APP_API_URL_LOCAL,
-    apiUrlProd: process.env.REACT_APP_API_URL_PRODUCTION
+    apiUrlProd: process.env.REACT_APP_API_URL_PRODUCTION 
   });
 // Optional: Interceptors for adding authorization tokens for AWS deployment
 apiClient.interceptors.request.use(

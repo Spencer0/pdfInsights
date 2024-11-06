@@ -11,7 +11,7 @@ ec2-54-80-193-13.compute-1.amazonaws.com
 
 ec2-52-201-106-84.compute-1.amazonaws.com
 
-ssh -i sendsage-deployment-key.pem ec2-user@ec2-54-80-193-13.compute-1.amazonaws.com
+ssh -i sendsage-deployment-key.pem ec2-user@ec2-54-196-11-133.compute-1.amazonaws.com
 
 [ec2-user@ip-172-31-39-159 /]$ docker ps -q --filter publish=3000
 b30ea4c8f854
