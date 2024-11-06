@@ -57,7 +57,7 @@ app.get('/healthcheck', async (req, res) => {
 });
 
 
-app.get('/randomendpoint', async (req, res) => {
+app.get('/randomendpoint2', async (req, res) => {
     console.log('randomendpoint hit'); 
     try {
         res.status(200).json({ status: '1' }); 
