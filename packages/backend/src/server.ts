@@ -7,7 +7,6 @@ import { PDFInsights } from '../../common/models/PDFInsights';
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 
-
 //Handrolled cors policy
 //TODO Split backend into more than one file 
 const allowedOrigins = [
