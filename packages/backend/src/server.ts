@@ -9,16 +9,34 @@ const upload = multer({ dest: 'uploads/' });
 
 
 //Handrolled cors policy
-
-
-//Order Matters, keep this above the endpoints
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3001'); //TODO make a backend env file
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    next();
-  });
+//TODO Split backend into more than one file 
+const allowedOrigins = [
+    'http://localhost:3001',
+    'https://spendsages.click',
+    'https://www.spendsages.click'
+  ];
   
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (origin && allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+    }
+  
+    res.header('Access-Control-Allow-Headers', 
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    
+    res.header('Access-Control-Allow-Methods', 
+      'GET, POST, PUT, DELETE, OPTIONS');
+    
+    // Add additional security headers
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Max-Age', '86400'); // 24 hours
+    res.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains'); // HSTS
+
+
+    next();
+});
+
 
 app.post('/pdfinsights', upload.single('file'), async (req, res) => {
     try {
