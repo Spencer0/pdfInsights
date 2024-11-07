@@ -62,5 +62,21 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         continue-on-error: true
         run: |
+          echo "Starting CloudFront cache invalidation..."
+          
+          echo "Fetching CloudFront Distribution ID from CloudFormation Stack..."
           DISTRIBUTION_ID=$(aws cloudformation describe-stacks --stack-name SpendSage-Frontend-Stack --query "Stacks[0].Outputs[?OutputKey=='CloudFrontURL'].OutputValue" --output text --region us-east-1)
+          
+          if [ -z "$DISTRIBUTION_ID" ]; then
+            echo "Error: Failed to retrieve Distribution ID"
+            echo "CloudFormation Stack Output:"
+            aws cloudformation describe-stacks --stack-name SpendSage-Frontend-Stack --region us-east-1
+            exit 1
+          else
+            echo "Retrieved Distribution ID: $DISTRIBUTION_ID"
+          fi
+          
+          echo "Creating cache invalidation..."
           aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+          
+          echo "Cache invalidation request completed."
