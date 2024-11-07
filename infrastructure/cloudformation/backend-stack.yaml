@@ -21,12 +21,10 @@ Resources:
   DynamoDBStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: "./dynamodb-stack.yaml"  # Update with your S3 URL when deploying
 
   EC2Stack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: "./ec2-stack.yaml"  # Update with your S3 URL when deploying
       Parameters:
         LatestAmiId: !Ref LatestAmiId
         KeyPairName: !Ref KeyPairName
