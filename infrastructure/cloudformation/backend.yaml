@@ -27,7 +27,7 @@ Resources:
         - AttributeName: "userId"
           AttributeType: "S"
       KeySchema:
-        - AttributeName: "id"
+        - AttributeName: "userId"
           KeyType: "HASH"
 
   BackendECRRepository:
