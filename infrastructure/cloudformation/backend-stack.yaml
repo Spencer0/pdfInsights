@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64'
+
+  KeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance"
+
+  DomainName:
+    Type: String
+    Description: "The domain name (e.g., example.com)"
+
+  HostedZoneId:
+    Type: AWS::Route53::HostedZone::Id
+    Description: "The Route 53 Hosted Zone ID for your domain"
+
+Resources:
+  DynamoDBStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: "./dynamodb-stack.yaml"  # Update with your S3 URL when deploying
+
+  EC2Stack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: "./ec2-stack.yaml"  # Update with your S3 URL when deploying
+      Parameters:
+        LatestAmiId: !Ref LatestAmiId
+        KeyPairName: !Ref KeyPairName
+        DomainName: !Ref DomainName
+        HostedZoneId: !Ref HostedZoneId
+        DynamoDBTableArn: !GetAtt DynamoDBStack.Outputs.TableArn
+        DynamoDBTableName: !GetAtt DynamoDBStack.Outputs.TableName
+
+Outputs:
+  InstanceId:
+    Description: "Instance ID of the backend EC2 instance"
+    Value: !GetAtt EC2Stack.Outputs.InstanceId
+  EC2PublicIP:
+    Description: "Public IP address of the EC2 instance"
+    Value: !GetAtt EC2Stack.Outputs.EC2PublicIP
+  DomainName:
+    Description: "Domain name for the application"
+    Value: !GetAtt EC2Stack.Outputs.DomainName
+  DynamoDBTableName:
+    Description: "Name of the DynamoDB table"
+    Value: !GetAtt DynamoDBStack.Outputs.TableName

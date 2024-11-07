@@ -39,7 +39,7 @@ jobs:
         working-directory: ./infrastructure/cloudformation
         run: |
           aws cloudformation deploy \
-            --template-file backend.yaml \
+            --template-file backend-stack.yaml \
             --stack-name SpendSage-Backend-Stack \
             --capabilities CAPABILITY_IAM \
             --no-fail-on-empty-changeset \
