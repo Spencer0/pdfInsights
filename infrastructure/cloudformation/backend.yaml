@@ -18,6 +18,18 @@ Parameters:
     Description: "The Route 53 Hosted Zone ID for your domain"
 
 Resources:
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "spend-sage-users-table"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "id"
+          KeyType: "HASH"
+
   BackendECRRepository:
     Type: "AWS::ECR::Repository"
     Properties:
@@ -45,6 +57,20 @@ Resources:
                   - "ecr:BatchCheckLayerAvailability"
                   - "ecr:GetAuthorizationToken"
                 Resource: "*"
+        # Add DynamoDB access policy
+        - PolicyName: "DynamoDBAccessPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "dynamodb:PutItem"
+                  - "dynamodb:GetItem"
+                  - "dynamodb:UpdateItem"
+                  - "dynamodb:DeleteItem"
+                  - "dynamodb:Query"
+                  - "dynamodb:Scan"
+                Resource: !GetAtt DynamoDBTable.Arn
 
   BackendInstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
@@ -110,7 +136,10 @@ Resources:
           
           # Pull and run backend container
           docker pull 216989142399.dkr.ecr.us-east-1.amazonaws.com/spendsage-backend:latest
-          docker run -d -p 3000:3000 216989142399.dkr.ecr.us-east-1.amazonaws.com/spendsage-backend:latest
+          docker run -d -p 3000:3000 \
+            -e AWS_REGION=${AWS::Region} \
+            -e DYNAMODB_TABLE=${DynamoDBTable} \
+            216989142399.dkr.ecr.us-east-1.amazonaws.com/spendsage-backend:latest
 
           # Configure Nginx
           cat > /etc/nginx/conf.d/backend.conf << 'EOL'
