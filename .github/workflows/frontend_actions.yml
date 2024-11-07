@@ -65,7 +65,8 @@ jobs:
           echo "Starting CloudFront cache invalidation..."
           
           echo "Fetching CloudFront Distribution ID from CloudFormation Stack..."
-          DISTRIBUTION_ID=$(aws cloudformation describe-stacks --stack-name SpendSage-Frontend-Stack --query "Stacks[0].Outputs[?OutputKey=='CloudFrontURL'].OutputValue" --output text --region us-east-1)
+          DISTRIBUTION_ID=$(aws cloudformation describe-stacks --stack-name SpendSage-Frontend-Stack --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue" --output text --region us-east-1)
+)
           
           if [ -z "$DISTRIBUTION_ID" ]; then
             echo "Error: Failed to retrieve Distribution ID"
