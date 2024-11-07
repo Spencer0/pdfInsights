@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import { generateRandomInsights } from './insightsGenerator'; 
 import { PDFInsights } from '../../common/models/PDFInsights';
+import { userRoutes } from './routes/routes';
 // Import the generator function
 
 const app = express();
@@ -15,7 +16,7 @@ const allowedOrigins = [
     'https://www.spendsages.click'
   ];
   
-  app.use((req, res, next) => {
+app.use((req, res, next) => {
     const origin = req.headers.origin;
     if (origin && allowedOrigins.includes(origin)) {
       res.header('Access-Control-Allow-Origin', origin);
@@ -35,6 +36,8 @@ const allowedOrigins = [
 
     next();
 });
+// Routes
+app.use('/users', userRoutes);
 
 app.post('/pdfinsights', upload.single('file'), async (req, res) => {
     try {
