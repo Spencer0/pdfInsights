@@ -20,12 +20,14 @@ Parameters:
 Resources:
   DynamoDBStack:
     Type: AWS::CloudFormation::Stack
+    TemplateURL: "./dynamodb-stack.yaml"  
     Properties:
 
   EC2Stack:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
+        TemplateURL: "./ec2-stack.yaml"
         LatestAmiId: !Ref LatestAmiId
         KeyPairName: !Ref KeyPairName
         DomainName: !Ref DomainName
